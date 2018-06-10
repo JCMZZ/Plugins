@@ -1,0 +1,51 @@
+html,body{
+  height:100%;
+  width: 100%;
+  position: relative;
+}
+.main{
+  width:400px;
+  height:500px;
+  position: absolute;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border:1px solid #000000;
+  perspective: 2000px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.left,.right{
+  width:50%;
+  height:100%;
+  position: absolute;
+  top:0;
+  transition:all 2s;
+}
+.left{
+  left:0;
+  transform-origin: 0 100% 0;
+}
+.right{
+  right: 0;
+  transform-origin: 100% 0 0;
+}
+.main:hover .left{
+  transform:rotateY(90deg);
+}
+.main:hover .right{
+  transform:rotateY(-90deg);
+}
+.left img,
+.right img{
+  position: absolute;
+  top:0;
+}
+.left img{
+  left:0;
+}
+.right img{
+  right:0;
+}  

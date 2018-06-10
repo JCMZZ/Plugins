@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>二维码美化插件</title>
+
+    <style>
+        body {
+            background: #000;
+        }
+
+        .content {
+            width: 620px;
+            margin: auto;
+            margin-top: 100px;
+        }
+
+        #container {
+            float:left;
+            margin-right:20px;
+        }
+        #container2>canvas{
+          width:100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <img id="imgLogo" src="" style="width:20px;height:20px" hidden>
+
+        <!--文字logo-->
+        <div id="container">
+            <canvas width="400" height="400"></canvas>
+        </div>
+
+        <!--图片logo-->
+        <div id="container2">
+            <canvas width="400" height="400"></canvas>
+        </div>
+    </div>
+    <script src="../jquery-3.3.1.js"></script>
+    <script src="./jqueryqr.js"></script>
+    <script src="./qrcode.js"></script>
+    <script>
+        $(document).ready(function () {
+            //文字logo
+            $("#container").erweima({
+                render:'image',
+                label: 'jQuery'
+            });
+           //图片logo
+            $('#container2').erweima({
+                mode: 4,
+                mSize:20,
+                image: $("#imgLogo")[0]
+            });
+        });
+		setTimeout(()=>{$("#imgLogo").attr('src','./6.jpg')},3000)
+    </script>
+</body>
+</html>
