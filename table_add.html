@@ -3,124 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script type="text/javascript" 
-src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript">
-	$(function(){
-		//给加入购物车按钮添加事件
-		$("input[value='加入购物车']").click(function(){
-			//通过按钮 得到上级td 再得到td的所有兄弟td 
-			//从所有兄弟td中得到第一个 和第二个
-			var name = $(this).parent().siblings().eq(0).text();
-			
-			var price = $(this).parent().siblings().eq(1).text();
-			//alert(name+price);
-			if(name==='水杯'||name==='鼠标'||name==='键盘'){
-			   var btn = event.target;
-				//得到按钮的span兄弟 里面的数值
-				var count = 
-					parseInt($(btn).siblings("span").text());
-				//进行+1或-1 的运算
-				count+=1
-				//如果计算数值小于等于0 则取消事件
-				if(count<=0){
-					return false;
-				}
-				//把值放回去
-				$(btn).siblings("span").text(count);
-				
-				//得到单价 通过按钮得到td 再得到td的哥哥
-				var price = 
-					parseFloat($(btn).parent().prev().text());
-				//alert(price);
-				//把数量*单价的结果放到金额td里面
-				$(btn).parent().next().text(count*price);
-				
-				//计算总价
-				calfn();
-				
-			}else{
-				//创建tr
-				var $tr = $("<tr></tr>");
-				//创建5个td
-				var $nametd = $("<td>"+name+"</td>");
-				var $pricetd = $("<td>"+price+"</td>");
-				var $counttd = 
-				$("<td><input type='button' value='-' onclick='countfn(-1)'>"
-				+"<span>1</span><input type='button' value='+' onclick='countfn(1)'></td>");
-				var $moneytd = $("<td>"+price+"</td>");
-				var $deltd = $("<td><input type='button' value='删除' onclick='delfn(this)'></td>"); 
-				//把5个td装进tr
-				$tr.append($nametd);
-				$tr.append($pricetd);
-				$tr.append($counttd);
-				$tr.append($moneytd);
-				$tr.append($deltd);
-				//把tr插入到总价的上面 
-				$("#total").before($tr);
-				
-				//计算总价
-				calfn();
-			}
-		});
-	})
-	
-	function delfn(btn){
-		//得到按钮所在行 删除
-		$(btn).parent().parent().remove();
-		
-		//计算总价
-		calfn();
-	}
-	
-	//加减按钮函数
-	function countfn(num){
-		//得到事件源按钮
-		var btn = event.target;
-		//得到按钮的span兄弟 里面的数值
-		var count = 
-			parseInt($(btn).siblings("span").text());
-		//进行+1或-1 的运算
-		count+=num
-		//如果计算数值小于等于0 则取消事件
-		if(count<=0){
-			return false;
-		}
-		//把值放回去
-		$(btn).siblings("span").text(count);
-		
-		//得到单价 通过按钮得到td 再得到td的哥哥
-		var price = 
-			parseFloat($(btn).parent().prev().text());
-		//alert(price);
-		//把数量*单价的结果放到金额td里面
-		$(btn).parent().next().text(count*price);
-		
-		//计算总价
-		calfn();
-	}
-	
-	//计算总价函数
-	function calfn(){
-		var total = 0;
-		//得到第二个table里面的所有tr
-		$("table:eq(1) tr").each(function(){
-			//得到每一行的金额
-			var money = 
-				parseFloat($(this).children().eq(3).text());
-			//alert(money);
-			//判断得到的金额非NaN 
-			if(money){
-				total+=money;
-			}
-		});
-		//把总价显示到页面中
-		$("#total td").text("总价："+total);
-		
-	}
-	
-	
-</script>
 <style type="text/css">
 	body{
 		/* 让整个页面内容居中 */
@@ -139,12 +21,17 @@ src="js/jquery-1.4.2.min.js"></script>
 	#total{
 		text-align: right;
 	}
+	.count{
+		width: 70px;
+		display: inline-block;
+		height: 100%;
+	}
 
 </style>
 </head>
 <body>
  <h1>特价商品</h1>
- <table >
+ <table id="commodity_list">
  	<tr>
  		<th>商品名称</th>
  		<th>商品单价</th>
@@ -157,51 +44,195 @@ src="js/jquery-1.4.2.min.js"></script>
  		<td>25</td>
  		<td>3</td>
  		<td>89</td>
- 		<td><input type="button" value="加入购物车"></td>
+ 		<td><input data-id=1 type="button" value="加入购物车"></td>
  	</tr> 
  	<tr>
  		<td>鼠标</td>
  		<td>50</td>
  		<td>100</td>
  		<td>92</td>
- 		<td><input type="button" value="加入购物车"></td>
+ 		<td><input data-id=2 type="button" value="加入购物车"></td>
  	</tr> 
  	<tr>
  		<td>键盘</td>
  		<td>120</td>
  		<td>30</td>
  		<td>95</td>
- 		<td><input type="button" value="加入购物车"></td>
+ 		<td><input data-id=3 type="button" value="加入购物车"></td>
  	</tr> 
  	<tr>
  		<td>苹果电脑</td>
  		<td>6888</td>
  		<td>10</td>
  		<td>98</td>
- 		<td><input type="button" value="加入购物车"></td>
+ 		<td><input data-id=4 type="button" value="加入购物车"></td>
  	</tr> 
- 	 	<tr>
+ 	<tr>
  		<td>达内学习卡</td>
  		<td>9888</td>
  		<td>1000</td>
  		<td>100</td>
- 		<td><input type="button" value="加入购物车"></td>
+ 		<td><input data-id=5 type="button" value="加入购物车"></td>
  	</tr> 
  </table>
  <h1>购物车</h1>
  <table>
- 	<tr>
- 		<th>商品名称</th>
- 		<th>单价</th>
- 		<th>数量</th>
- 		<th>金额</th>
- 		<th>操作</th>
- 	</tr>
- 	<tr id="total">
- 		<td colspan="5" >总价:</td>
- 	</tr>
+	<thead>
+		<tr>
+			<th>商品名称</th>
+			<th>单价</th>
+			<th>数量</th>
+			<th>金额</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody id='carList'>
+	</tbody> 
+	<tfoot>
+		<tr id="total">
+			<td colspan="5" >总价:￥<span>0</span></td>
+		</tr>
+	</tfoot>
  </table>
- 
+<script type="text/javascript" src="./jquery-3.3.1.js"></script>
+<script type="text/javascript">
+ $(function(){
+	 // 定义存储购物车数据的js对象(hash表)
+	 var shopCar = {}
+	 // 定义更新总价钱的方法 参数shopCar:购物车的数据对象
+	 function totalPrice(shopCar){
+		 // 定义total变量，并赋值为number类型 0
+		 var total = 0
+		 // 循环购物车数据对象，累计总价
+		 for(var item in shopCar){
+			 // 当前产品单价 * 当前购买数量，值累加到total
+			 total += shopCar[item].type1 * shopCar[item].count
+		 }
+		 // 更新总价DOM
+		 $('#total td span').text(total)
+	 }
+	 // 定义方法删除指定购物车数据
+	 /*
+	 * shopCar: 购物车的数据对象
+	 * id: 产品id
+	 */
+	 function del(shopCar,id){
+		  // 更新购物车列表，删除指定行
+			$('#carList tr[data-id='+id+']').remove()
+			// 删除shopCar中对应的产品数据
+			delete shopCar['row'+id]
+	 }
+	 // 定义方法更新购物列表中指定产品的购买数量和购买总价
+	 /*
+	 * rowData: 购物车的指定数据对象(产品对象)
+	 * id: 产品id
+	 */
+	 function update(rowData,id){
+		 // 更新购买数量
+		 $('#carList span[data-id='+id+']').text(rowData.count)
+		 // 更新购买总价
+		 $('#carList td[data-id='+id+']').text(rowData.count * rowData.type1)
+	 }
+	 // 产品表按钮的事件委托
+	 $("#commodity_list").on('click','input',function(){
+		 // 获取单个产品的数据唯一标识: id
+		 var rowId = $(this).data('id');
+		 // 收集单个商品的数据
+		 var rowData = {};
+		 // 添加id属性存储唯一标识: rowId
+		 rowData['id'] = rowId
+		 /*
+		 * 初试化count属性(产品的购买数量)为 1
+		 * 避免totalPrice方法中对count属性取值出现undefined
+		 * 导致程序报错
+		 */
+		 rowData['count'] = 1
+		 // 循环出产品的相应信息
+		 $(this).parent().siblings().each(function(index,dom){
+			 // 通过type和元素索引(index)的拼接，区分属性
+			 /*
+			 * type0:代指产品标题
+			 * type1:代指产品单价
+			 * type2:代指产品库存
+			 * type3:代指产品好评率
+			 */
+			 rowData['type' + index] = $(dom).text()
+		 })
+		 // 根据产品id判断shopCar对象(购物车)中是否存在对应数据
+		 if(!shopCar['row'+rowId]){
+			 // 不存在就将数据添加到shopCar
+			 shopCar['row'+rowId] = rowData
+			 // 进行html标签拼接
+			 /*
+			 * 标签自定义属性的定义:data-xxx = xxx
+			 * 对标签添加自定义属性id，在操作DOM时实现快速定位
+			 * 对按钮添加自定义属性type，在事件委托时，区分事件类型
+			 */
+			 var carRow = `<tr data-id=${rowData.id}>
+				 <td>${rowData.type0}</td>
+				 <td>${rowData.type1}</td>
+				 <td><button data-type='subtract'>-</button><span class="count" data-id=${rowData.id}>1</span><button data-type='plus'>+</button></td>
+				 <td data-id=${rowData.id}>${rowData.type1}</td>
+				 <td><button data-type='del'>删除</button></td></tr>
+			 ` 
+			 // 更新购物车表格视图，将新添加的数据放到第一行
+			 $('#carList').prepend(carRow)
+		 } else {
+			 // 如果shopCar中存在对应产品，直接修改对应产品的购买数量count
+			 shopCar['row'+rowId].count += rowData.count
+			 // 调用update方法，通过id进行视图更新(购买数量、当前产品的总金额)
+			 update(shopCar['row'+rowId],rowId)
+		 }
+		 // 最后调用方法进行总金额更新
+		 totalPrice(shopCar)
+	 })
+
+	 // 购物车列表按钮事件委托
+	 $("#carList").on('click','button',function(){
+		 // 根据type值，进行事件操作
+		 /*
+		 * subtract: -按钮事件
+		 * plus: +按钮事件
+		 * del: 删除按钮事件
+		 */
+		 var type = $(this).data('type')
+		 // 获取本次要操作的产品数据id
+		 var id = $(this).parentsUntil('#body','tr').data('id')
+		 // 根据id在shopCar中获取对应的产品数据(产品对象)
+		 /*
+		 * 注意:
+		 * 	rowData 变量是引用了shopCar中的指定对象(产品对象)，
+		 *		在不对rowData变量重新赋值时，
+		 *		一切对rowData这个对象本身的属性进行操作都会影响到shopCar对象，
+		 *		这也就导致，在操作rowData对象时不用再去手动更新shopCar的数据
+		 */
+		 var rowData = shopCar['row'+id]
+		 switch(type){
+			 // 减少购买
+			 case 'subtract':
+				 rowData.count--
+				 break
+			 // 添加购买
+			 case 'plus':
+				 rowData.count++
+				 break
+			 // 删除购买
+			 case 'del':
+				 // 调用del方法，在shopCar中删除对应数据
+				 del(shopCar,id)
+		 }
+		 /*
+		 * 当购买数量减为0时，
+		 * 同样调用del方法，在shopCar中删除对应数据；
+		 * 当购买数量大于0时，
+		 * 调用update方法，通过id更新对应数据视图(购买数量、当前产品的总金额)
+		 */
+		 rowData.count <= 0 ? del(shopCar,id) : update(rowData,id)
+		 // 最后调用方法进行总金额更新
+		 totalPrice(shopCar)
+	 })
+ })
+</script>
 </body>
 </html>
 
