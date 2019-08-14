@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <script src="./vue-2.6.10.js"></script>
+    <script src="./data.js"></script>
+    <div id="app">
+        <multiple-choice v-model="multipleVal" :options="opts" active-label-color="red" label-color="green"></multiple-choice>
+        <button style="float: right" @click="conData">BUTTON</button>
+    </div>
+    <script>
+        Vue.component('multiple-choice', {
+            template: `
+                <label for="bindInput" :class="['custom_select_main','el-select',{customfocus: isUnfold}]" 
+                    @click.self="unfoldHandler" @mouseenter="isLabel=false" @mouseleave="isLabel=true">
+                    <span v-for='(value,index) in selectVal' :key="index" class='el-tag el-tag--info el-tag--small' @click="unfoldHandler">
+                        <span class='el-select__tags-text'>{{value | viewText}}</span>
+                        <i class='el-tag__close el-icon-close' @click.self.stop="delHandler(index)"></i>
+                    </span>
+                    <i :class="['customposition','el-input__icon','el-icon-arrow-down',{roate: isUnfold}]" @click="unfoldHandler"></i>
+                    <div class="custom_opts_main" v-if="isUnfold">
+                        <ul class="custom_opts">
+                            <li v-for="(val,key) in options" :key="key" class="opt_item" @click="levelOneHandler(val, key)">
+                                <span :style="{color: check(val.id)? activeLabelColor : labelColor}">{{val.label}}</span>
+                                <i v-if="val.children && val.children.length > 0"
+                                    :class="['custom_opts_arrow','el-input__icon','el-icon-arrow-down',{roateItem: key === acitveIndex}]"></i>
+                                <div v-if="val.children && val.children.length > 0 && key === acitveIndex"
+                                    class="custom_opts_item_main">
+                                    <ul class="custom_opts custom_opts_item_opts">
+                                        <li v-for="(item,itemIndex) in val.children" :key="itemIndex" class="opt_item"
+                                            @click.stop="levelTwoHandler(item, itemIndex, val)">
+                                            <span :style="{color:check(item.id, val.id)? activeLabelColor : labelColor}">{{item.label}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <input type="text" readonly id="bindInput" class="bindInput" @blur="bindInputHandler">
+                </label>    
+            `,
+            props: {
+                /**
+                 * Array
+                 *      Object
+                 *        id 
+                 *        value
+                 *        label
+                 *        children
+                 */
+                options: {
+                    type: Array,
+                    default () {
+                        return []
+                    }
+                },
+                /**
+                 * 选中的值
+                 */
+                value: {
+                    type: Object,
+                    default () {
+                        return {}
+                    }
+                },
+                /**
+                 * 字体颜色
+                 */
+                labelColor: {
+                    type: String,
+                    default () {
+                        return '#606266'
+                    }
+                },
+                /**
+                 * 选中字体颜色
+                 */
+                activeLabelColor: {
+                    type: String,
+                    default () {
+                        return '#409eff'
+                    }
+                }
+            },
+            data() {
+                return {
+                    /* 鼠标是否在label元素上 */
+                    isLabel: false,
+                    /* 收/展状态 */
+                    isUnfold: false,
+                    selectItem: false,
+                    acitveIndex: '',
+                    activeId: '',
+                    selectVal: this.value
+                }
+            },
+            filters: {
+                viewText(val) {
+                    if (val.children === undefined) {
+                        return val.label
+                    } else {
+                        return val.label + ':' + (val.children.label ? val.children.label : '')
+                    }
+                }
+            },
+            watch: {
+                value(newVal, oldVal) {
+                    this.selectVal = newVal
+                }
+            },
+            methods: {
+                /**
+                 * 展开下拉框
+                 */
+                unfoldHandler() {
+                    this.isUnfold = !this.isUnfold
+                    this.acitveIndex = ''
+                    this.activeId = ''
+                },
+                levelOneHandler(val, index) {
+                    /* 展示子级 */
+                    this.acitveIndex = index === this.acitveIndex ? '' : index
+                    this.activeId = val.id === this.activeId ? '' : val.id
+                    if (this.selectVal[val.id] === undefined && val.children === undefined) {
+                        Vue.set(this.selectVal, val.id, JSON.parse(JSON.stringify(val)))
+                    }
+                },
+                levelTwoHandler(val, index, parentData) {
+                    let newObj = JSON.parse(JSON.stringify(parentData))
+                    newObj.children = JSON.parse(JSON.stringify(val))
+                    Vue.set(this.selectVal, parentData.id, newObj)
+                },
+                check(id, parentId) {
+                    if (parentId === undefined) {
+                        return this.selectVal[id] !== undefined;
+                    } else {
+                        return this.selectVal[parentId] && this.selectVal[parentId].children.id === id
+                    }
+                },
+                delHandler(key) {
+                    Vue.delete(this.selectVal, key)
+                },
+                bindInputHandler() {
+                    if (this.isLabel) {
+                        this.isUnfold = false
+                        this.acitveIndex = ''
+                        this.activeId = ''
+                    }
+                }
+            }
+        });
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                multipleVal: {},
+                opts: graphShowMode
+            },
+            methods: {
+                conData() {
+                    console.log(this.multipleVal);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

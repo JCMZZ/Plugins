@@ -1,0 +1,156 @@
+.select_option_main {
+    position: absolute;
+    right: -20px;
+    bottom: -100%;
+}
+
+.opItem {
+    position: relative;
+}
+
+.opts {
+    position: absolute;
+}
+
+.custom_select_main {
+    max-width: 380px;
+    width: 250px;
+    min-height: 40px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px;
+    padding-right: 35px;
+    border: 1px solid #e4e7ed;
+}
+
+.custom_select_main.customfocus {
+    border-radius: 5px;
+    border: 1px solid #2879bd;
+}
+
+.customposition {
+    position: absolute;
+    right: 5px;
+    top: 0px;
+}
+
+.custom_select_main>span {
+    float: left;
+}
+
+.roate {
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.custom_opts_main {
+    position: absolute;
+    bottom: 0;
+    width: 110%;
+    left: 20px;
+}
+
+.custom_opts {
+    margin: 0;
+    list-style: none;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding: 0;
+    width: 180px;
+    border: 1px solid #e4e7ed;
+    position: absolute;
+    top: 10px;
+    background: #f5f5f5;
+    left: -15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    z-index: 10000;
+}
+
+.custom_opts::after {
+    position: absolute;
+    left: 15px;
+    display: inline-block;
+    content: '';
+    top: 2406px;
+    box-sizing: border-box;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #fff;
+    border-left: 6px solid transparent;
+}
+
+.custom_opts::before {
+    position: absolute;
+    left: 14px;
+    display: inline-block;
+    content: '';
+    top: 272px;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-top: 7px solid #fff;
+}
+
+.opt_item {
+    position: relative;
+    text-align: left;
+    box-sizing: border-box;
+    padding: 5px 35px 5px 15px;
+    height: 34px;
+    line-height: 22px;
+}
+
+.opt_item:hover {
+    background: #2879bd14;
+}
+
+.custom_opts_arrow {
+    position: absolute;
+    right: 5px;
+    top: 0;
+}
+
+.custom_opts_item_main {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+
+.custom_opts_item_opts {
+    width: 80px;
+    box-shadow: 3px 0 12px rgba(0, 0, 0, .175);
+    position: absolute;
+    left: 15px;
+    top: 0;
+}
+
+.custom_opts_item_opts::before {
+    left: -14px;
+    top: 6px;
+    border-top: 7px solid transparent;
+    border-right: 7px solid #ccc;
+    border-bottom: 7px solid transparent;
+}
+
+.custom_opts_item_opts::after {
+    left: -11.5px;
+    top: 7px;
+    border-top: 6px solid transparent;
+    border-right: 6px solid #fff;
+    border-bottom: 6px solid transparent;
+}
+
+.roateItem {
+    transform-origin: center;
+    transform: rotate(-90deg);
+}
+
+.bindInput {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: none;
+}
