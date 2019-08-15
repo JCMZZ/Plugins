@@ -8,15 +8,22 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        #app {
+            margin-top: 100px;
+        }
+    </style>
 </head>
 
 <body>
     <script src="./vue-2.6.10.js"></script>
     <script src="./data.js"></script>
+    <div style="height: 400px;width:300px"></div>
     <div id="app">
         <multiple-choice v-model="multipleVal" :options="opts" active-label-color="red" label-color="green"></multiple-choice>
         <button style="float: right" @click="conData">BUTTON</button>
     </div>
+    <div style="height: 400px;width:300px"></div>
     <script>
         Vue.component('multiple-choice', {
             template: `
@@ -27,15 +34,15 @@
                         <i class='el-tag__close el-icon-close' @click.self.stop="delHandler(index)"></i>
                     </span>
                     <i :class="['customposition','el-input__icon','el-icon-arrow-down',{roate: isUnfold}]" @click="unfoldHandler"></i>
-                    <div class="custom_opts_main" v-if="isUnfold">
-                        <ul class="custom_opts">
+                    <div class="custom_opts_main" v-show="isUnfold" :x-position="xposition">
+                        <ul id="opts_main" class="custom_opts sign">
                             <li v-for="(val,key) in options" :key="key" class="opt_item" @click="levelOneHandler(val, key)">
                                 <span :style="{color: check(val.id)? activeLabelColor : labelColor}">{{val.label}}</span>
                                 <i v-if="val.children && val.children.length > 0"
                                     :class="['custom_opts_arrow','el-input__icon','el-icon-arrow-down',{roateItem: key === acitveIndex}]"></i>
                                 <div v-if="val.children && val.children.length > 0 && key === acitveIndex"
                                     class="custom_opts_item_main">
-                                    <ul class="custom_opts custom_opts_item_opts">
+                                    <ul class="custom_opts sign custom_opts_item_opts" :x-position="xposition">
                                         <li v-for="(item,itemIndex) in val.children" :key="itemIndex" class="opt_item"
                                             @click.stop="levelTwoHandler(item, itemIndex, val)">
                                             <span :style="{color:check(item.id, val.id)? activeLabelColor : labelColor}">{{item.label}}</span>
@@ -50,12 +57,7 @@
             `,
             props: {
                 /**
-                 * Array
-                 *      Object
-                 *        id 
-                 *        value
-                 *        label
-                 *        children
+                 * 下拉选项
                  */
                 options: {
                     type: Array,
@@ -100,7 +102,8 @@
                     selectItem: false,
                     acitveIndex: '',
                     activeId: '',
-                    selectVal: this.value
+                    selectVal: this.value,
+                    xposition: ''
                 }
             },
             filters: {
@@ -122,12 +125,21 @@
                  * 展开下拉框
                  */
                 unfoldHandler() {
+                    this.selectOptMianPosition();
                     this.isUnfold = !this.isUnfold
                     this.acitveIndex = ''
                     this.activeId = ''
                 },
+                selectOptMianPosition() {
+                    var {top, bottom} = document.querySelector('[for="bindInput"]').getBoundingClientRect();
+                    var winHeight = window.innerHeight;
+                    if(top >= (winHeight - bottom)){
+                        this.xposition = 'top';
+                        return
+                    }
+                    this.xposition = 'bottom';
+                },
                 levelOneHandler(val, index) {
-                    /* 展示子级 */
                     this.acitveIndex = index === this.acitveIndex ? '' : index
                     this.activeId = val.id === this.activeId ? '' : val.id
                     if (this.selectVal[val.id] === undefined && val.children === undefined) {
@@ -156,7 +168,14 @@
                         this.activeId = ''
                     }
                 }
-            }
+            },
+            mounted() {
+                this.selectOptMianPosition();
+                window.addEventListener('scroll', this.selectOptMianPosition);
+            },
+            beforeDestroy() {
+                window.removeEventListener('scroll', this.selectOptMianPosition);
+            },
         });
         var vm = new Vue({
             el: '#app',
