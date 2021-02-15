@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>element-ui custom select</title>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -20,7 +20,8 @@
     <script src="./data.js"></script>
     <div style="height: 400px;width:300px"></div>
     <div id="app">
-        <multiple-choice v-model="multipleVal" :options="opts" active-label-color="red" label-color="green"></multiple-choice>
+        <multiple-choice v-model="multipleVal" :options="opts" active-label-color="red" label-color="green">
+        </multiple-choice>
         <button style="float: right" @click="conData">BUTTON</button>
     </div>
     <div style="height: 400px;width:300px"></div>
@@ -61,7 +62,7 @@
                  */
                 options: {
                     type: Array,
-                    default () {
+                    default() {
                         return []
                     }
                 },
@@ -70,7 +71,7 @@
                  */
                 value: {
                     type: Object,
-                    default () {
+                    default() {
                         return {}
                     }
                 },
@@ -79,7 +80,7 @@
                  */
                 labelColor: {
                     type: String,
-                    default () {
+                    default() {
                         return '#606266'
                     }
                 },
@@ -88,7 +89,7 @@
                  */
                 activeLabelColor: {
                     type: String,
-                    default () {
+                    default() {
                         return '#409eff'
                     }
                 }
@@ -131,9 +132,9 @@
                     this.activeId = ''
                 },
                 selectOptMianPosition() {
-                    var {top, bottom} = document.querySelector('[for="bindInput"]').getBoundingClientRect();
+                    var { top, bottom } = document.querySelector('[for="bindInput"]').getBoundingClientRect();
                     var winHeight = window.innerHeight;
-                    if(top >= (winHeight - bottom)){
+                    if (top >= (winHeight - bottom)) {
                         this.xposition = 'top';
                         return
                     }
